@@ -6,12 +6,6 @@
     GROUP: users
 
   tasks:
-    - name: Set authorized key taken from file
-      ansible.posix.authorized_key:
-        user: "{{ USER }}"
-        state: present
-        key: "{{ lookup('env', 'SSH_PUB_KEY') }}"
-
     - name: Ensure group "{{ GROUP }}" exists
       ansible.builtin.group:
         name: "{{ GROUP }}"
@@ -24,3 +18,10 @@
         groups: "{{ GROUP }}"
         append: yes
         system: yes # system account
+        shell: /bin/bash
+
+    - name: Set authorized key taken from file
+      ansible.posix.authorized_key:
+        user: "{{ USER }}"
+        state: present
+        key: "{{ lookup('env', 'SSH_PUB_KEY') }}"

@@ -13,6 +13,9 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+
+      - name: install community docker-compose plugins
+        run: ansible-galaxy collection install community.docker
       
       - name: Deploy
         env:
@@ -20,4 +23,5 @@ jobs:
           ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
           SSH_PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
+          GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
         run: chmod +x ./deploy.sh && ./deploy.sh

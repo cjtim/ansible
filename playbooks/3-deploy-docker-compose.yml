@@ -1,0 +1,26 @@
+- name: Start service
+  hosts: all
+  vars:
+    USER: ansible
+    USER_HOME: "/home/{{ USER }}"
+    PROJECT_PATH: "{{ USER_HOME }}/my-server"
+    GIT_REPO: https://cjtim:{{ GIT_PASSWORD }}@github.com/cjtim/my-server.git
+
+  become: yes
+  become_user: "{{ USER }}"
+  
+  tasks:
+    - name: Clone
+      ansible.builtin.git:
+        repo: "{{ GIT_REPO }}"
+        dest: "{{ PROJECT_PATH }}"
+        force: yes
+        accept_hostkey: yes
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: "{{ PROJECT_PATH }}"
+        build: yes
+        pull: yes
+        remove_orphans: yes
+        state: present

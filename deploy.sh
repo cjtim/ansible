@@ -31,7 +31,11 @@ fi
 
 
 # run playbook
-ls playbooks | xargs -I {} ansible-playbook playbooks/{} --inventory=$TMP_INVENTORY_FILE
+# ls playbooks | xargs -I {} ansible-playbook playbooks/{} --inventory=$TMP_INVENTORY_FILE
+
+ansible-playbook playbooks/1-add-user.yml --inventory=$TMP_INVENTORY_FILE
+ansible-playbook playbooks/2-install.yml --inventory=$TMP_INVENTORY_FILE
+ansible-playbook playbooks/3-deploy-docker-compose.yml --inventory=$TMP_INVENTORY_FILE --extra-vars "GIT_PASSWORD=$GIT_PASSWORD"
 
 # cleanup
 rm -f $TMP_INVENTORY_FILE $TMP_SSH_FILE
