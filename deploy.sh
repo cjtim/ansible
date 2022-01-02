@@ -10,6 +10,8 @@ if [ -z "$ANSIBLE_INVENTORY_BASE64" ]; then
     exit 1
 fi
 
+echo "$SSH_PUB_KEY"
+
 echo "$ANSIBLE_INVENTORY_BASE64" | base64 -d > $TMP_FILE
 echo "$SSH_KEY" > $TMP_SSH
 chmod 600 $TMP_SSH
