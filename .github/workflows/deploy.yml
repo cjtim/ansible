@@ -17,6 +17,12 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
       
+      - name: Add SSH key
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_FILE: ~/.ssh/id_rsa
+        run: echo ${SSH_KEY} > ${SSH_FILE} && chmod 600 ${SSH_FILE}
+      
       - name: Deploy
         env:
           ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
