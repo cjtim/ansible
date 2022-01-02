@@ -52,16 +52,23 @@
         name: docker-ce
         state: latest
 
-    - name: Install Docker Module for Python
+    - name: Install pip and setuptools Module for Python
       pip:
-        name: docker
+        name: "{{ item }}"
+        extra_args: --upgrade
+      loop: ["pip", "setuptools"]
+    
+    - name: Install Docker and Docker Compose
+      pip:
+        name: "{{ item }}"
+      loop: ["docker", "docker-compose"]
 
     - name: Ensure group "docker" exists
       ansible.builtin.group:
         name: docker
         state: present
 
-    - name: Add the user "{{ USER }}" with group user
+    - name: Add the user "{{ USER }}" with group "docker"
       ansible.builtin.user:
         name: "{{ USER }}"
         groups: docker
