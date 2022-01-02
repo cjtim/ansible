@@ -2,6 +2,7 @@ name: Deploy
 
 on:
   push:
+  workflow_dispatch:
 
 env:
   ANSIBLE_HOST_KEY_CHECKING: False
