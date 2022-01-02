@@ -1,0 +1,22 @@
+name: Deploy
+
+on:
+  push:
+
+env:
+  ANSIBLE_HOST_KEY_CHECKING: False
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      
+      - name: Deploy
+        env:
+          ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
+        run: chmod +x ./deploy.sh && ./deploy.sh
