@@ -4,9 +4,6 @@ on:
   push:
   workflow_dispatch:
 
-env:
-  ANSIBLE_HOST_KEY_CHECKING: False
-
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -17,13 +14,9 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
       
-      - name: Add SSH key
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_FILE: ~/.ssh/id_rsa
-        run: echo ${SSH_KEY} > ${SSH_FILE} && chmod 600 ${SSH_FILE}
-      
       - name: Deploy
         env:
+          ANSIBLE_HOST_KEY_CHECKING: False
           ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: chmod +x ./deploy.sh && ./deploy.sh
