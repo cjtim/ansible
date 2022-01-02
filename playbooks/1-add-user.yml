@@ -10,7 +10,7 @@
       ansible.posix.authorized_key:
         user: "{{ USER }}"
         state: present
-        key: "{{ lookup('env', 'SSH_PUB_KEY') | default(lookup('file', '~/.ssh/id_rsa.pub'), True) }}"
+        key: "{{ lookup('env', 'SSH_PUB_KEY') }}"
 
     - name: Ensure group "{{ GROUP }}" exists
       ansible.builtin.group:
