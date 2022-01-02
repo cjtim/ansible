@@ -10,7 +10,9 @@ if [ -z "$ANSIBLE_INVENTORY_BASE64" ]; then
     exit 1
 fi
 
-echo "$SSH_PUB_KEY"
+if [ -z "$SSH_PUB_KEY" ]; then
+    export SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
+fi
 
 echo "$ANSIBLE_INVENTORY_BASE64" | base64 -d > $TMP_FILE
 echo "$SSH_KEY" > $TMP_SSH
