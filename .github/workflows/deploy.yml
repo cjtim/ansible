@@ -14,8 +14,11 @@ jobs:
       - name: Checkout branch
         uses: actions/checkout@v2
 
-      - name: install community docker-compose plugins
-        run: ansible-galaxy collection install community.docker
+      - name: Install community plugins
+        run: |
+          ansible-galaxy collection install \
+          community.docker \
+          community.general
       
       - name: Deploy
         env:
