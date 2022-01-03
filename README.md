@@ -15,9 +15,9 @@
 | ENV |  | Mandatory | Default
 |--|--|--|--|
 | `ANSIBLE_INVENTORY_BASE64` | Ansible inventory file in yaml format | yes | `""` |
-| `SSH_KEY` | For login into server | yes | `""` |
+| `SSH_KEY` | SSH Private key to login server as `root` | yes | `""` |
 | `ANSIBLE_SSH_PUB_KEY` | SSH Public key for `ansible` user **`playbooks/1-add-user.yml`** | no | `""` |
-| `GIT_PASSWORD` | to clone repositoy **`playbooks/3-deploy-docker-compose.yml`** | no | `""` |
+| `GIT_REPO` | to clone repositoy **`playbooks/3-deploy-docker-compose.yml`** | no | `""` |
 
 
 ## Deploy
@@ -25,6 +25,6 @@
 export ANSIBLE_INVENTORY_BASE64=$(base64 < hosts.yml)
 export SSH_KEY=$(cat ~/.ssh/id_rsa)
 export ANSIBLE_SSH_PUB_KEY=$(cat ~/.ssh/id_rsa.pub)
-export GIT_PASSWORD=""
+export GIT_REPO=""
 ./deploy.sh
 ```
