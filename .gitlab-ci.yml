@@ -1,0 +1,33 @@
+stages:
+  - deploy
+
+.ssh:
+  image: gableroux/ansible:4.5.0
+  before_script:
+    - eval `ssh-agent -s` # start ssh-agent
+    # - echo "$SSH_PRIVATE_KEY" | base64 -d | ssh-add -
+
+.master-rules:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+
+# Pipeline
+deploy:
+  stage: deploy
+  extends:
+    - .ssh
+    - .master-rules
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "false"
+    MY_SERVER_REPO: cjtim/my-server
+  script:
+    - |
+      ansible-galaxy collection install \
+      community.docker \
+      community.general
+
+    - export GIT_REPO="https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
+
+    - chmod +x ./deploy.sh && ./deploy.sh

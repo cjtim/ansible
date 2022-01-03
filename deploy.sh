@@ -27,7 +27,7 @@ chmod 600 $TMP_SSH_FILE
 
 ansible-playbook playbooks/1-add-user.yml --inventory=$TMP_INVENTORY_FILE
 ansible-playbook playbooks/2-install.yml --inventory=$TMP_INVENTORY_FILE
-ansible-playbook playbooks/3-deploy-docker-compose.yml --inventory=$TMP_INVENTORY_FILE --extra-vars "GIT_PASSWORD=$GIT_PASSWORD"
+ansible-playbook playbooks/3-deploy-docker-compose.yml --inventory=$TMP_INVENTORY_FILE --extra-vars "GIT_REPO=${GIT_REPO}"
 
 # cleanup
 rm -f $TMP_INVENTORY_FILE $TMP_SSH_FILE

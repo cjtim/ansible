@@ -26,5 +26,5 @@ jobs:
           ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
           ANSIBLE_SSH_PUB_KEY: ${{ secrets.ANSIBLE_SSH_PUB_KEY }}
-          GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+          GIT_REPO: "https://cjtim:${{ secrets.GIT_PASSWORD }}@github.com/cjtim/my-server.git"
         run: chmod +x ./deploy.sh && ./deploy.sh
