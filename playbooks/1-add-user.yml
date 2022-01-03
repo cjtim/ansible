@@ -1,9 +1,8 @@
 - name: Add User
   hosts: all
   become: true # run as root
-  vars:
-    USER: ansible
-    GROUP: users
+  vars_files: 
+    - ../vars/all.yml
 
   tasks:
     - name: Ensure group "{{ GROUP }}" exists
@@ -24,6 +23,6 @@
       ansible.posix.authorized_key:
         user: "{{ USER }}"
         state: present
-        key: "{{ lookup('env', 'ANSIBLE_SSH_PUB_KEY') }}"
+        key: "{{ ANSIBLE_SSH_PUB_KEY }}"
       when: ANSIBLE_SSH_PUB_KEY | default('', true) | trim != ''
       ignore_errors: True # incase no ANSIBLE_SSH_PUB_KEY was set

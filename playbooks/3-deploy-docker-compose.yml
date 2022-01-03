@@ -1,10 +1,7 @@
 - name: Start service
   hosts: all
-  vars:
-    USER: ansible
-    USER_HOME: "/home/{{ USER }}"
-    PROJECT_PATH: "{{ USER_HOME }}/my-server"
-    # GIT_REPO: https://cjtim:{{ GIT_PASSWORD }}@github.com/cjtim/my-server.git
+  vars_files: 
+    - ../vars/all.yml
 
   become: yes
   become_user: "{{ USER }}"

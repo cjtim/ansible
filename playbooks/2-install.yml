@@ -1,8 +1,9 @@
 - name: Install Packages
   hosts: all
   become: true # run as root
-  vars:
-    USER: ansible
+  vars_files: 
+    - ../vars/all.yml
+
   tasks:
     - name: Output system uname
       ansible.builtin.shell: "uname -a"

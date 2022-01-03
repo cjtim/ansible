@@ -1,36 +1,61 @@
 stages:
+  - install
   - deploy
+
+variables:
+  IS_INSTALL:
+    value: "yes"
+    description: "setup server. 'yes' or 'no'"
+  IS_DEPLOY:
+    value: "yes"
+    description: "Deploy services. 'yes' or 'no'"
 
 .ssh:
   image: gableroux/ansible:4.5.0
   before_script:
     - eval `ssh-agent -s` # start ssh-agent
-    # - echo "$SSH_PRIVATE_KEY" | base64 -d | ssh-add -
-
-.master-rules:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
-    # https://docs.gitlab.com/ee/ci/triggers/index.html#configure-cicd-jobs-to-run-in-triggered-pipelines
-    - if: $CI_COMMIT_BRANCH == "trigger"
-    - if: $CI_COMMIT_BRANCH == "pipeline"
-
-# Pipeline
-deploy:
-  stage: deploy
-  extends:
-    - .ssh
-    - .master-rules
-  variables:
-    ANSIBLE_HOST_KEY_CHECKING: "false"
-    MY_SERVER_REPO: cjtim/my-server
-  script:
     - |
       ansible-galaxy collection install \
       community.docker \
       community.general
+    - chmod +x ./deploy.sh
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "false"
+  resource_group: ansible
 
-    - export GIT_REPO="https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
+.master-rules: &master-rules
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+  - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+  - if: $CI_PIPELINE_SOURCE == "push"
+    when: manual
+  - if: $CI_PIPELINE_SOURCE == "trigger"
+  - if: $CI_PIPELINE_SOURCE == "pipeline"
+  - if: $CI_PIPELINE_SOURCE == "web"
 
-    - chmod +x ./deploy.sh && ./deploy.sh
+# Pipeline
+install:
+  stage: install
+  extends:
+    - .ssh
+  rules:
+    - if: $IS_INSTALL == "no"
+      when: never
+    - *master-rules
+  script:
+    - ./deploy.sh playbooks/1-add-user.yml
+    - ./deploy.sh playbooks/2-install.yml
+
+deploy:
+  stage: deploy
+  extends:
+    - .ssh
+  rules:
+    - if: $IS_DEPLOY == "no"
+      when: never
+    - *master-rules
+  variables:
+    MY_SERVER_REPO: cjtim/my-server
+    GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
+  script:
+    - ./deploy.sh playbooks/3-deploy-docker-compose.yml

@@ -19,12 +19,26 @@ jobs:
           ansible-galaxy collection install \
           community.docker \
           community.general
-      
-      - name: Deploy
+
+      - name: Set Permission
+        run: chmod +x ./deploy.sh
+
+      - name: Install
         env:
           ANSIBLE_HOST_KEY_CHECKING: False
           ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
           SSH_KEY: ${{ secrets.SSH_KEY }}
+
           ANSIBLE_SSH_PUB_KEY: ${{ secrets.ANSIBLE_SSH_PUB_KEY }}
+        run: |
+          ./deploy.sh playbooks/1-add-user.yml
+          ./deploy.sh playbooks/2-install.yml
+
+      - name: Start service
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: False
+          ANSIBLE_INVENTORY_BASE64: ${{ secrets.ANSIBLE_INVENTORY_BASE64 }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+
           GIT_REPO: "https://cjtim:${{ secrets.GIT_PASSWORD }}@github.com/cjtim/my-server.git"
-        run: chmod +x ./deploy.sh && ./deploy.sh
+        run: ./deploy.sh playbooks/3-deploy-docker-compose.yml

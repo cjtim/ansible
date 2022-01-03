@@ -25,9 +25,7 @@ chmod 600 $TMP_SSH_FILE
 # run playbook
 # ls playbooks | xargs -I {} ansible-playbook playbooks/{} --inventory=$TMP_INVENTORY_FILE
 
-ansible-playbook playbooks/1-add-user.yml --inventory=$TMP_INVENTORY_FILE
-ansible-playbook playbooks/2-install.yml --inventory=$TMP_INVENTORY_FILE
-ansible-playbook playbooks/3-deploy-docker-compose.yml --inventory=$TMP_INVENTORY_FILE --extra-vars "GIT_REPO=${GIT_REPO}"
+ansible-playbook $1 --inventory=$TMP_INVENTORY_FILE
 
 # cleanup
 rm -f $TMP_INVENTORY_FILE $TMP_SSH_FILE
