@@ -1,7 +1,6 @@
 #!/bin/sh
 
 DEFAULT_ID_RSA_PATH=~/.ssh/id_rsa
-DEFAULT_ID_RSA_PUB_PATH=~/.ssh/id_rsa.pub
 
 TMP_INVENTORY_FILE=tmp_hosts.yml
 TMP_SSH_FILE=tmp_id_rsa
@@ -22,13 +21,6 @@ if [ -z "$SSH_KEY" ]; then
 fi
 echo "$SSH_KEY" > $TMP_SSH_FILE
 chmod 600 $TMP_SSH_FILE
-
-# lookup for public key and store in var
-if [ -z "$SSH_PUB_KEY" ]; then
-    SSH_PUB_KEY=$(cat $DEFAULT_ID_RSA_PUB_PATH)
-    export SSH_PUB_KEY
-fi
-
 
 # run playbook
 # ls playbooks | xargs -I {} ansible-playbook playbooks/{} --inventory=$TMP_INVENTORY_FILE

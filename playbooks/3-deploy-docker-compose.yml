@@ -10,14 +10,23 @@
   become_user: "{{ USER }}"
   
   tasks:
+    - name: Set remote
+      community.general.git_config:
+        repo: '{{ PROJECT_PATH }}'
+        scope: 'local'
+        name: 'remote.origin.url'
+        value: '{{ GIT_REPO }}'
+      ignore_errors: True
+
     - name: Clone
       ansible.builtin.git:
         repo: "{{ GIT_REPO }}"
         dest: "{{ PROJECT_PATH }}"
         force: yes
         accept_hostkey: yes
+        depth: 1
 
-    - name: Tear down existing services
+    - name: Start services
       community.docker.docker_compose:
         project_src: "{{ PROJECT_PATH }}"
         build: yes
