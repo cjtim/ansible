@@ -4,13 +4,14 @@
     USER: ansible
     USER_HOME: "/home/{{ USER }}"
     PROJECT_PATH: "{{ USER_HOME }}/my-server"
-    GIT_REPO: https://cjtim:{{ GIT_PASSWORD }}@github.com/cjtim/my-server.git
+    # GIT_REPO: https://cjtim:{{ GIT_PASSWORD }}@github.com/cjtim/my-server.git
 
   become: yes
   become_user: "{{ USER }}"
   
   tasks:
     - name: Set remote
+      when: GIT_REPO | default('', true) | trim != ''
       community.general.git_config:
         repo: '{{ PROJECT_PATH }}'
         scope: 'local'
@@ -19,6 +20,7 @@
       ignore_errors: True
 
     - name: Clone
+      when: GIT_REPO | default('', true) | trim != ''
       ansible.builtin.git:
         repo: "{{ GIT_REPO }}"
         dest: "{{ PROJECT_PATH }}"
@@ -27,6 +29,7 @@
         depth: 1
 
     - name: Start services
+      when: GIT_REPO | default('', true) | trim != ''
       community.docker.docker_compose:
         project_src: "{{ PROJECT_PATH }}"
         build: yes

@@ -25,4 +25,5 @@
         user: "{{ USER }}"
         state: present
         key: "{{ lookup('env', 'ANSIBLE_SSH_PUB_KEY') }}"
+      when: ANSIBLE_SSH_PUB_KEY | default('', true) | trim != ''
       ignore_errors: True # incase no ANSIBLE_SSH_PUB_KEY was set
