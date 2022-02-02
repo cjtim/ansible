@@ -1,0 +1,70 @@
+---
+- name: Output system uname
+  ansible.builtin.shell: "uname -a"
+  register: uname_output
+  changed_when: False
+
+- name: output
+  ansible.builtin.debug:
+    var: uname_output.stdout
+
+- name: Install aptitude using apt
+  apt:
+    name: aptitude
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Install required system packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    [
+      "apt-transport-https",
+      "ca-certificates",
+      "curl",
+      "software-properties-common",
+      "python3-pip",
+      "virtualenv",
+      "python3-setuptools",
+    ]
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt:
+    update_cache: yes
+    name: docker-ce
+    state: latest
+
+- name: Install pip and setuptools Module for Python
+  pip:
+    name: "{{ item }}"
+    extra_args: --upgrade
+  loop: ["pip", "setuptools"]
+
+- name: Install Docker and Docker Compose
+  pip:
+    name: "{{ item }}"
+  loop: ["docker", "docker-compose"]
+
+- name: Ensure group "docker" exists
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Add the user "{{ user }}" with group "docker"
+  ansible.builtin.user:
+    name: "{{ user }}"
+    groups: docker
+    append: yes

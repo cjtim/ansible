@@ -1,0 +1,21 @@
+---
+- name: Ensure group "{{ group }}" exists
+  ansible.builtin.group:
+    name: "{{ group }}"
+    state: present
+
+- name: Add the user "{{ user }}" with group "{{ group }}"
+  ansible.builtin.user:
+    name: "{{ user }}"
+    comment: Ansible automated user
+    groups: "{{ group }}"
+    append: yes
+    system: yes # system account
+    shell: /bin/bash
+
+- name: Set authorized key taken from file
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ ansible_ssh_pub_key }}"
+  when: ansible_ssh_pub_key | default('false', true) | trim != 'false'

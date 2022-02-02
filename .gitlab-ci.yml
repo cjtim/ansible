@@ -14,10 +14,10 @@ variables:
   image: gableroux/ansible:4.5.0
   before_script:
     - eval `ssh-agent -s` # start ssh-agent
-    - |
-      ansible-galaxy collection install \
-      community.docker \
-      community.general
+    # - |
+    #   ansible-galaxy collection install \
+    #   community.docker \
+    #   community.general
     - chmod +x ./deploy.sh
   variables:
     ANSIBLE_HOST_KEY_CHECKING: "false"
@@ -43,8 +43,7 @@ install:
       when: never
     - *master-rules
   script:
-    - ./deploy.sh playbooks/1-add-user.yml
-    - ./deploy.sh playbooks/2-install.yml
+    - ansible-playbook -i hosts.yml main.yml --tags users --tags docker
 
 deploy:
   stage: deploy
@@ -58,4 +57,4 @@ deploy:
     MY_SERVER_REPO: cjtim/my-server
     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
   script:
-    - ./deploy.sh playbooks/3-deploy-docker-compose.yml
+    - ansible-playbook -i hosts.yml main.yml --tags "docker_compose_service"

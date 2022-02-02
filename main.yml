@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - name: users
+      tags: [ users ]
+      become: true # run as root
+    - name: docker
+      tags: [ docker ]
+      become: true # run as root
+    - name: docker_compose_service
+      tags: [ docker_compose_service ]
+      become: true 
+      become_user: "{{ user }}"
+      

@@ -1,9 +1,0 @@
----
-USER: ansible
-GROUP: users
-USER_HOME: "/home/{{ USER }}"
-ANSIBLE_SSH_PUB_KEY: "{{ lookup('env', 'ANSIBLE_SSH_PUB_KEY') }}"
-
-# 3-deploy-docker-compose.yml
-PROJECT_PATH: "{{ USER_HOME }}/my-server"
-GIT_REPO: "{{ lookup('env', 'GIT_REPO') }}"
