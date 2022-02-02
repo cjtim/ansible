@@ -19,6 +19,7 @@ variables:
     #   community.docker \
     #   community.general
     - chmod +x ./deploy.sh
+    - ./deploy.sh
   variables:
     ANSIBLE_HOST_KEY_CHECKING: "false"
   resource_group: ansible
