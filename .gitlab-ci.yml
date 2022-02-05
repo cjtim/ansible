@@ -18,6 +18,7 @@ variables:
   image: gableroux/ansible:4.5.0
   before_script:
     - eval `ssh-agent -s` # start ssh-agent
+    - chmod 600 $ANSIBLE_PRIVATE_KEY_FILE
     - cat $INVENTORY_PATH > $DEFAULT_INVENTORY_PATH
     # - |
     #   ansible-galaxy collection install \
@@ -26,7 +27,9 @@ variables:
     # - chmod +x ./deploy.sh
     # - ./deploy.sh
   script:
-    - ansible-playbook main.yml $TAGS
+    - |
+      echo "ansible-playbook main.yml $TAGS"
+      ansible-playbook main.yml $TAGS
   resource_group: ansible
 
 .master-rules: &master-rules
