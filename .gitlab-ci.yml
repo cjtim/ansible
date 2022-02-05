@@ -3,6 +3,7 @@ stages:
   - deploy
 
 variables:
+  ANSIBLE_CONFIG: ansible.cfg
   DEFAULT_INVENTORY_PATH: hosts.yml
   # ANSIBLE_PRIVATE_KEY_FILE -- type: file
   # INVENTORY_PATH -- type: file
