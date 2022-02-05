@@ -3,6 +3,9 @@ stages:
   - deploy
 
 variables:
+  DEFAULT_INVENTORY_PATH: hosts.yml
+  # ANSIBLE_PRIVATE_KEY_FILE -- type: file
+  # INVENTORY_PATH -- type: file
   IS_INSTALL:
     value: "yes"
     description: "setup server. 'yes' or 'no'"
@@ -14,11 +17,12 @@ variables:
   image: gableroux/ansible:4.5.0
   before_script:
     - eval `ssh-agent -s` # start ssh-agent
+    - cat $INVENTORY_PATH > $DEFAULT_INVENTORY_PATH
     # - |
     #   ansible-galaxy collection install \
     #   community.docker \
     #   community.general
-    - chmod +x ./deploy.sh
+    # - chmod +x ./deploy.sh
     # - ./deploy.sh
   script:
     - ansible-playbook main.yml $TAGS
