@@ -19,9 +19,9 @@ variables:
     #   community.docker \
     #   community.general
     - chmod +x ./deploy.sh
-    - ./deploy.sh
-  variables:
-    ANSIBLE_HOST_KEY_CHECKING: "false"
+    # - ./deploy.sh
+  script:
+    - ansible-playbook main.yml $TAGS
   resource_group: ansible
 
 .master-rules: &master-rules
@@ -43,8 +43,8 @@ install:
     - if: $IS_INSTALL == "no"
       when: never
     - *master-rules
-  script:
-    - ansible-playbook -i hosts.yml main.yml --tags users --tags docker
+  variables:
+    TAGS: --tags users --tags docker
 
 deploy:
   stage: deploy
@@ -57,5 +57,4 @@ deploy:
   variables:
     MY_SERVER_REPO: cjtim/my-server
     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
-  script:
-    - ansible-playbook -i hosts.yml main.yml --tags "docker_compose_service"
+    TAGS: --tags "docker_compose_service"
