@@ -1,17 +1,7 @@
 ---
-- name: Output system uname
-  ansible.builtin.shell: "uname -a"
-  register: uname_output
-  changed_when: False
-
-- name: output
-  ansible.builtin.debug:
-    var: uname_output.stdout
-
 - name: Install aptitude using apt
   apt:
-    name: aptitude
-    state: latest
+    name: aptitude=0.8.10-6ubuntu1
     update_cache: yes
     force_apt_get: yes
 
