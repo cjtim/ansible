@@ -6,7 +6,7 @@
 
 ## Prerequisite
 * Ansible >= 2.12
-* Ansible inventory file `hosts.yml` in root of repo
+* *Ansible inventory file `hosts.yml` in root of repo
 * Private key for root user
 * Public key for `ansible` user
 
@@ -14,8 +14,8 @@
 ## Environment variables
 | ENV |  | Mandatory | Default
 |--|--|--|--|
-| `ANSIBLE_CONFIG` | Ansible inventory file in yaml format | yes | `""` |
-| `ANSIBLE_PRIVATE_KEY_FILE` | SSH Private key to login server as `root` | yes | `""` |
+| `ANSIBLE_CONFIG` | Ansible config location `ansible.cfg` | yes | `""` |
+| `ANSIBLE_PRIVATE_KEY_FILE` | SSH Private key path to login server as `root` | yes | `""` |
 | `ANSIBLE_SSH_PUB_KEY` | SSH Public key for `ansible` user for **users** | no | `""` |
 | `GIT_REPO` | for **docker_compose_service** | no | `""` |
 | `GRAFANA_API_KEY` | for **monitor** | no | `""` |
