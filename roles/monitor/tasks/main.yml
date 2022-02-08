@@ -1,13 +1,13 @@
 ---
 - name: download grafanacloud-install.sh
-  when: "{{when_skipped}}"
+  when: (grafana_api_key | default(False, true)) and (grafana_id | default(False, true))
   get_url:
     url: https://raw.githubusercontent.com/grafana/agent/release/production/grafanacloud-install.sh
     dest: /tmp/
     mode: 0755
 
 - name: excecute grafanacloud-install.sh
-  when: "{{when_skipped}}"
+  when: (grafana_api_key | default(False, true)) and (grafana_id | default(False, true))
   shell: /tmp/grafanacloud-install.sh
   environment:
     ARCH: amd64
@@ -16,7 +16,7 @@
     GCLOUD_API_KEY: "{{ grafana_api_key }}"
 
 - name: Remove the grafanacloud-install.sh
-  when: "{{when_skipped}}"
+  when: (grafana_api_key | default(False, true)) and (grafana_id | default(False, true))
   file:
     path: /tmp/grafanacloud-install.sh
     state: absent

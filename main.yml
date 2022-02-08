@@ -15,3 +15,6 @@
       tags: [docker_compose_service]
       become: true
       become_user: "{{ user }}"
+    
+    - name: service
+      tags: [service]

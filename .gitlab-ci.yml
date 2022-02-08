@@ -20,12 +20,6 @@ variables:
     - eval `ssh-agent -s` # start ssh-agent
     - chmod 600 $ANSIBLE_PRIVATE_KEY_FILE
     - cat $INVENTORY_PATH > $DEFAULT_INVENTORY_PATH
-    # - |
-    #   ansible-galaxy collection install \
-    #   community.docker \
-    #   community.general
-    # - chmod +x ./deploy.sh
-    # - ./deploy.sh
   script:
     - |
       echo "ansible-playbook main.yml $TAGS"
@@ -65,4 +59,4 @@ deploy:
   variables:
     MY_SERVER_REPO: cjtim/my-server
     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
-    TAGS: --tags docker_compose_service
+    TAGS: --tags docker_compose_service --tags service

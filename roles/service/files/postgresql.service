@@ -1,0 +1,16 @@
+[Unit]
+Description=Port forward postgresql
+After=network.target auditd.service
+
+[Service]
+User=root
+WorkingDirectory=/root
+ExecStart=/bin/bash -c 'export KUBECONFIG=/root/kb.yml && kubectl config set-context --current --namespace sql-cjtim && /usr/local/bin/kubectl port-forward service/postgresql --address 0.0.0.0 5432:5432'
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+KillMode=process
+Type=idle
+
+[Install]
+WantedBy=multi-user.target
+Alias=postgresql.service

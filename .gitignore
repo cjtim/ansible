@@ -1,3 +1,4 @@
 **/*hosts*
 !*.example
 tmp*
+**/id_rsa*
