@@ -1,0 +1,24 @@
+---
+- name: Install required system packages
+  apt:
+    name:
+      - "apt-transport-https=1.6.14"
+      - "ca-certificates=20210119~18.04.2"
+      - "curl=7.58.0-2ubuntu3.16"
+    update_cache: yes
+
+- name: Add kubectl apt key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    state: present
+
+- name: Add kubectl Repository
+  apt_repository:
+    repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+
+- name: Update apt and install kubectl
+  apt:
+    update_cache: yes
+    name: kubectl=1.23.3-00

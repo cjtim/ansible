@@ -17,15 +17,14 @@
 
 - name: Install required system packages
   apt:
-    name: 
-      - "apt-transport-https"
-      - "ca-certificates"
-      - "curl"
-      - "software-properties-common"
-      - "python3-pip"
-      - "virtualenv"
-      - "python3-setuptools"
-    state: latest
+    name:
+      - "apt-transport-https=1.6.14"
+      - "ca-certificates=20210119~18.04.2"
+      - "curl=7.58.0-2ubuntu3.16"
+      - "software-properties-common=0.96.24.32.18"
+      - "python3-pip=9.0.1-2.3~ubuntu1.18.04.5"
+      - "virtualenv=15.1.0+ds-1.1"
+      - "python3-setuptools=39.0.1-2"
     update_cache: yes
 
 - name: Add Docker GPG apt Key
@@ -41,21 +40,20 @@
 - name: Update apt and install docker-ce
   apt:
     update_cache: yes
-    name: docker-ce
-    state: latest
+    name: docker-ce=5:20.10.12~3-0~ubuntu-bionic
 
-- name: Install pip and setuptools Module for Python
-  pip:
-    name:
-      - "pip"
-      - "setuptools"
-    extra_args: --upgrade
+- name: Include install kubectl
+  include_tasks: roles/docker/tasks/kubectl.yml
 
-- name: Install Docker and Docker Compose
+- name: Install Module for Python
   pip:
-    name: 
-      - "docker"
-      - "docker-compose"
+    name: "{{ item.name }}"
+    version: "{{ item.version }}"
+  with_items:
+    - { name: "pip", version: "21.3.1" }
+    - { name: "setuptools", version: "59.6.0" }
+    - { name: "docker", version: "5.0.3" }
+    - { name: "docker-compose", version: "1.29.2" }
 
 - name: Ensure group "docker" exists
   ansible.builtin.group:
