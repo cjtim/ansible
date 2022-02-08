@@ -1,6 +1,6 @@
 ---
 - name: Set remote
-  when: git_repo | default('false', true) | trim != 'false'
+  when: git_repo | default(False, true)
   community.general.git_config:
     repo: '{{ project_path }}'
     scope: 'local'
@@ -9,7 +9,7 @@
   ignore_errors: True
 
 - name: Clone
-  when: git_repo | default('false', true) | trim != 'false'
+  when: git_repo | default(False, true)
   ansible.builtin.git:
     repo: "{{ git_repo }}"
     dest: "{{ project_path }}"
@@ -19,7 +19,7 @@
     depth: 1
 
 - name: Start services
-  when: git_repo | default('false', true) | trim != 'false'
+  when: git_repo | default(False, true)
   community.docker.docker_compose:
     project_src: "{{ project_path }}"
     build: yes

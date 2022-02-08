@@ -1,15 +1,17 @@
 ---
 - hosts: all
-  become: yes
+  become: true # run as root
   roles:
     - name: users
-      tags: [ users ]
-      become: true # run as root
+      tags: [users]
+
+    - name: monitor
+      tags: [monitor]
+
     - name: docker
-      tags: [ docker ]
-      become: true # run as root
+      tags: [docker]
+
     - name: docker_compose_service
-      tags: [ docker_compose_service ]
-      become: true 
+      tags: [docker_compose_service]
+      become: true
       become_user: "{{ user }}"
-      
