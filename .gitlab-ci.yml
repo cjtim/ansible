@@ -52,7 +52,7 @@ install:
       when: never
     - *master-rules
   variables:
-    TAGS: --tags users --tags docker
+    TAGS: --tags users --tags docker --tags monitor
 
 deploy:
   stage: deploy
