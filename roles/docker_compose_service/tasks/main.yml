@@ -25,4 +25,5 @@
     build: yes
     pull: yes
     remove_orphans: yes
+    restarted: yes
     state: present
