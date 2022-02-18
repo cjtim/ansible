@@ -1,6 +1,5 @@
 stages:
-  - install
-  - deploy
+  - run
 
 variables:
   ANSIBLE_CONFIG: ansible.cfg
@@ -15,18 +14,28 @@ variables:
     description: "Deploy services. 'yes' or 'no'"
 
 .ssh:
-  image: gableroux/ansible:4.5.0
+  image: python:3.10
   before_script:
+    - python -m pip install --user ansible
     - eval `ssh-agent -s` # start ssh-agent
     - chmod 600 $ANSIBLE_PRIVATE_KEY_FILE
     - cat $INVENTORY_PATH > $DEFAULT_INVENTORY_PATH
   script:
     - |
+      if [ "$IS_INSTALL" = 'yes' ]; then
+        export TAG="$TAG $INSTALL_TAGS"
+      elif [ "$IS_DEPLOY" = 'yes' ]; then
+        export TAG="$TAG $DEPLOY_TAGS"
+      fi
+    - |
       echo "ansible-playbook main.yml $TAGS"
       ansible-playbook main.yml $TAGS
   resource_group: ansible
+  variables:
+    INSTALL_TAGS: --tags users --tags docker --tags monitor
+    DEPLOY_TAGS: --tags docker_compose_service --tags service
 
-.master-rules: &master-rules
+.master-rules:
   - if: $CI_PIPELINE_SOURCE == "schedule"
     when: never
   - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
@@ -37,26 +46,26 @@ variables:
   - if: $CI_PIPELINE_SOURCE == "web"
 
 # Pipeline
-install:
-  stage: install
+run:
+  stage: run
   extends:
     - .ssh
-  rules:
-    - if: $IS_INSTALL == "no"
-      when: never
-    - *master-rules
-  variables:
-    TAGS: --tags users --tags docker --tags monitor
-
-deploy:
-  stage: deploy
-  extends:
-    - .ssh
-  rules:
-    - if: $IS_DEPLOY == "no"
-      when: never
-    - *master-rules
+    - .master-rules
   variables:
     MY_SERVER_REPO: cjtim/my-server
     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
-    TAGS: --tags docker_compose_service --tags service
+    # TAGS: --tags users --tags docker --tags monitor
+    # TAGS: --tags docker_compose_service --tags service
+
+# deploy:
+#   stage: deploy
+#   extends:
+#     - .ssh
+#   rules:
+#     - if: $IS_DEPLOY == "no"
+#       when: never
+#     - *master-rules
+#   variables:
+#     MY_SERVER_REPO: cjtim/my-server
+#     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
+#     TAGS: --tags docker_compose_service --tags service
