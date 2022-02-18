@@ -1,0 +1,3 @@
+---
+project_path: "{{ user_home }}/my-server"
+git_repo: "{{ lookup('env', 'GIT_REPO') }}"

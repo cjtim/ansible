@@ -1,0 +1,6 @@
+tasks:
+  - init: |
+      python -m pip install --user ansible
+      python -m pip install --user ansible-lint
+    command: |
+      echo 'TODO: start app'

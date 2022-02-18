@@ -1,0 +1,20 @@
+---
+- name: copy services
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    # root:root rwxr-xr-x
+    owner: root
+    group: root
+    mode: '0755' 
+  with_items: "{{ all_services }}"
+
+- name: systemctl reload
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: systemctl restart
+  ansible.builtin.systemd:
+    state: restarted
+    name: "{{ item.src }}"
+  with_items: "{{ all_services }}"

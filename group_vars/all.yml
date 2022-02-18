@@ -1,0 +1,4 @@
+---
+user: ansible
+group: users
+user_home: "/home/{{ user }}"

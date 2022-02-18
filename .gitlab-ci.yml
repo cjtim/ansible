@@ -3,6 +3,10 @@ stages:
   - deploy
 
 variables:
+  ANSIBLE_CONFIG: ansible.cfg
+  DEFAULT_INVENTORY_PATH: hosts.yml
+  # ANSIBLE_PRIVATE_KEY_FILE -- type: file
+  # INVENTORY_PATH -- type: file
   IS_INSTALL:
     value: "yes"
     description: "setup server. 'yes' or 'no'"
@@ -14,13 +18,12 @@ variables:
   image: gableroux/ansible:4.5.0
   before_script:
     - eval `ssh-agent -s` # start ssh-agent
+    - chmod 600 $ANSIBLE_PRIVATE_KEY_FILE
+    - cat $INVENTORY_PATH > $DEFAULT_INVENTORY_PATH
+  script:
     - |
-      ansible-galaxy collection install \
-      community.docker \
-      community.general
-    - chmod +x ./deploy.sh
-  variables:
-    ANSIBLE_HOST_KEY_CHECKING: "false"
+      echo "ansible-playbook main.yml $TAGS"
+      ansible-playbook main.yml $TAGS
   resource_group: ansible
 
 .master-rules: &master-rules
@@ -42,9 +45,8 @@ install:
     - if: $IS_INSTALL == "no"
       when: never
     - *master-rules
-  script:
-    - ./deploy.sh playbooks/1-add-user.yml
-    - ./deploy.sh playbooks/2-install.yml
+  variables:
+    TAGS: --tags users --tags docker --tags monitor
 
 deploy:
   stage: deploy
@@ -57,5 +59,4 @@ deploy:
   variables:
     MY_SERVER_REPO: cjtim/my-server
     GIT_REPO: "https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${MY_SERVER_REPO}.git"
-  script:
-    - ./deploy.sh playbooks/3-deploy-docker-compose.yml
+    TAGS: --tags docker_compose_service --tags service

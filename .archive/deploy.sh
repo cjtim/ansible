@@ -2,7 +2,7 @@
 
 DEFAULT_ID_RSA_PATH=~/.ssh/id_rsa
 
-TMP_INVENTORY_FILE=tmp_hosts.yml
+TMP_INVENTORY_FILE=hosts.yml
 TMP_SSH_FILE=tmp_id_rsa
 
 if [ -z "$ANSIBLE_INVENTORY_BASE64" ]; then
@@ -22,10 +22,5 @@ fi
 echo "$SSH_KEY" > $TMP_SSH_FILE
 chmod 600 $TMP_SSH_FILE
 
-# run playbook
-# ls playbooks | xargs -I {} ansible-playbook playbooks/{} --inventory=$TMP_INVENTORY_FILE
-
-ansible-playbook $1 --inventory=$TMP_INVENTORY_FILE
-
 # cleanup
-rm -f $TMP_INVENTORY_FILE $TMP_SSH_FILE
+# rm -f $TMP_INVENTORY_FILE $TMP_SSH_FILE

@@ -1,0 +1,5 @@
+warn_list:  # or 'skip_list' to silence them completely
+  - command-instead-of-shell  # Use shell only when shell functionality is required
+  - experimental  # all rules tagged as experimental
+  - git-latest  # Git checkouts must contain explicit version
+  - package-latest  # Package installs should not use latest

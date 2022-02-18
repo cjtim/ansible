@@ -1,0 +1,3 @@
+---
+all_services:
+  - { src: 'postgresql.service', dest: '/etc/systemd/system/postgresql.service' }

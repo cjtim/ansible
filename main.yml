@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true # run as root
+  gather_facts: no
+  roles:
+    - name: users
+      tags: [users]
+
+    - name: monitor
+      tags: [monitor]
+
+    - name: docker
+      tags: [docker]
+
+    - name: docker_compose_service
+      tags: [docker_compose_service]
+      become: true
+      become_user: "{{ user }}"
+    
+    - name: service
+      tags: [service]

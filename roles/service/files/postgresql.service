@@ -1,0 +1,19 @@
+[Unit]
+Description=Port forward postgresql
+After=network.target auditd.service
+StartLimitIntervalSec=500
+StartLimitBurst=50
+
+[Service]
+User=root
+WorkingDirectory=/root
+ExecStart=/usr/bin/kubectl port-forward service/postgresql --address 0.0.0.0 --namespace sql-cjtim --kubeconfig=/root/kb.yml 5432:5432
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+KillMode=process
+Type=idle
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+Alias=postgresql.service
