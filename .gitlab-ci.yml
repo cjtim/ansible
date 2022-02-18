@@ -23,9 +23,9 @@ variables:
   script:
     - |
       if [ "$IS_INSTALL" = 'yes' ]; then
-        export TAG="$TAG $INSTALL_TAGS"
+        export TAGS="$TAGS $INSTALL_TAGS"
       elif [ "$IS_DEPLOY" = 'yes' ]; then
-        export TAG="$TAG $DEPLOY_TAGS"
+        export TAGS="$TAGS $DEPLOY_TAGS"
       fi
     - |
       echo "ansible-playbook main.yml $TAGS"
